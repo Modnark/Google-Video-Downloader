@@ -10,40 +10,33 @@ rootPath = "FromID"
 makeDir(rootPath)
 makeDir(f"{rootPath}\\Videos")
 
-def getDocIdFromURL(url):
-    parsed = urlparse.urlparse(url.split(" ")[0])
+def IsURL(string):
+    parsed = urlparse.urlparse(string)
     if not parsed.scheme:
         return False
-    try:
-        return parse_qs(parsed.query)['docid'][0]
-    except Exception:
-        return False
+    return True
 
+def tryDownload(docid):
+    URL = f"http://web.archive.org/web/20111229082017im_/{docid}"
+    if not IsURL(docid):
+        URL = f"http://web.archive.org/web/20111229082017im_/http://video.google.com/videoplay?docid={docid}"
+    req = requests.get(URL)
+    if req.status_code == 200:
+        print(f"Found page for {docid}")
+        downloadVideo(req.text, URL, rootPath)
+    else:
+        print(f"Failed for: {docid} because: {req.status_code}") 
+        
 def worker(lines):
     for line in lines:
-        if not getDocIdFromURL(line) == False:
-            line = getDocIdFromURL(line)
-        req = requests.get(f"http://web.archive.org/web/http://video.google.com/videoplay?docid={line.strip().lstrip()}")
-        if req.status_code == 200:
-            print(f"Found page for {line.strip().lstrip()}")
-            downloadVideo(req.text, line.strip().lstrip(), rootPath)
-        else:
-            print(f"Failed for: {line.strip().lstrip()} because: {req.status_code}")
-
+        tryDownload(line)
 try:
     from bs4 import BeautifulSoup
 except ImportError as e:
     print("[Warning] BS4 not found. You will not be able to save videos with titles as their names.")
 
 if mode == 0:
-    if not getDocIdFromURL(docid) == False:
-        docid = getDocIdFromURL(docid)
-    req = requests.get(f"http://web.archive.org/web/http://video.google.com/videoplay?docid={docid}")
-    if req.status_code == 200:
-        print(f"Found page for {docid}")
-        downloadVideo(req.text, docid, rootPath)
-    else:
-        print(f"Failed for: {docid} because: {req.status_code}") 
+    tryDownload(docid)
 
 if mode == 1:
     threadC = input("# Threads (default: 5): ")
