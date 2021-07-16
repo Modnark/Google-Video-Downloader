@@ -12,8 +12,6 @@ try:
 except ImportError as e:
     canUseBS4 = False
 
-
-
 # This function was written by NT_x86
 def threadline(list,numthreads,function):
 	threadlists = {}
@@ -55,7 +53,7 @@ def downloadVideo(html, vidName, rootPath):
     soup = BeautifulSoup(html, features='html.parser')
     vidTitle = soup.find("div", {"id": "video-title"})
 
-    vidName = f"{rootPath}\\Videos\\{vidName}.flv" if not vidTitle else f"{rootPath}\\Videos\\{getfilteredname(f'{vidTitle.getText()}')}.flv"
+    vidName = f"{rootPath}\\Videos\\{vidName}.flv" if not vidTitle else f"{rootPath}\\Videos\\{getfilteredname(f'{vidName}-{vidTitle.getText()}')}.flv"
     mobj = re.search(r"(?i)videoUrl\\x3d(.+?)\\x26", html)
 
     if mobj is None:

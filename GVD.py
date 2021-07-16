@@ -31,7 +31,7 @@ def tryDownload(docid):
     req = requests.get(URL)
     if req.status_code == 200:
         print(f"Found page")
-        if downloadVideo(req.text, URL, rootPath):
+        if downloadVideo(req.text, getDocIdFromURL(docid), rootPath):
             return True
     
     print("Falling back to original URL")
@@ -43,7 +43,7 @@ def tryDownload(docid):
     req = requests.get(URL)
     if req.status_code == 200:
         print(f"Found page")
-        downloadVideo(req.text, URL, rootPath)
+        downloadVideo(req.text, getDocIdFromURL(docid), rootPath)
     else:
         print(f"Failed for: {docid} because: {req.status_code}") 
         
