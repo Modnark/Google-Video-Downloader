@@ -12,6 +12,8 @@ try:
 except ImportError as e:
     canUseBS4 = False
 
+
+
 # This function was written by NT_x86
 def threadline(list,numthreads,function):
 	threadlists = {}
@@ -63,7 +65,7 @@ def downloadVideo(html, vidName, rootPath):
         mediaURL = mediaURL.replace('\\x3d', '\x3d')
         mediaURL = mediaURL.replace('\\x26', '\x26')
 
-        req = requests.get(f"http://web.archive.org/web/20110418212702im_/{mediaURL}", allow_redirects=True)
+        req = requests.get(f"http://web.archive.org/web/201208im_/{mediaURL}", allow_redirects=True)
         URL = req.url + "\n"
         if not URL in open(f"{rootPath}\Success\\Success.txt", "a+").read():
             if req.status_code == 200:
@@ -72,6 +74,7 @@ def downloadVideo(html, vidName, rootPath):
                     good.write(URL)
                 with open(vidName, "wb+") as video:
                     video.write(req.content)
+                return True
             else:
                 print(f"Failed to download {vidName} becasue: {req.status_code}")
                 if not URL in open(f"{rootPath}\\Failed\\{req.status_code}.txt", "w+").read():

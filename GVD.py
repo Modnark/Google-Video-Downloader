@@ -16,13 +16,33 @@ def IsURL(string):
         return False
     return True
 
+def getDocIdFromURL(url):
+    parsed = urlparse.urlparse(url.split(" ")[0])
+    if not parsed.scheme:
+        return url
+    try:
+        return parse_qs(parsed.query)['docid'][0]
+    except Exception:
+        return url
+
 def tryDownload(docid):
-    URL = f"http://web.archive.org/web/20111229082017im_/{docid}"
-    if not IsURL(docid):
-        URL = f"http://web.archive.org/web/20111229082017im_/http://video.google.com/videoplay?docid={docid}"
+    # First attempt
+    URL = f"http://web.archive.org/web/201208im_/http://video.google.com/videoplay?docid={getDocIdFromURL(docid)}"
     req = requests.get(URL)
     if req.status_code == 200:
-        print(f"Found page for {docid}")
+        print(f"Found page")
+        if downloadVideo(req.text, URL, rootPath):
+            return True
+    
+    print("Falling back to original URL")
+    
+    # Fallback
+    URL = f"http://web.archive.org/web/201208im_/{docid}"
+    if not IsURL(docid):
+        URL = f"http://web.archive.org/web/201208im_/http://video.google.com/videoplay?docid={docid}"
+    req = requests.get(URL)
+    if req.status_code == 200:
+        print(f"Found page")
         downloadVideo(req.text, URL, rootPath)
     else:
         print(f"Failed for: {docid} because: {req.status_code}") 
