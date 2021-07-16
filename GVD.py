@@ -32,5 +32,5 @@ if mode == 0:
 
 if mode == 1:
     threadC = input("# Threads (default: 5): ")
-    threads = int(threadC) if threadC.isnumberic() and threadC and len(threadC) > 0 else 5
+    threads = int(threadC) if threadC.isnumeric() and threadC and len(threadC) > 0 else 5
     threadline(open(docid, "r").readlines(), threads, worker)
