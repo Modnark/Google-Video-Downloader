@@ -17,6 +17,8 @@ The bs4 module (install with pip)
 if you have python and pip installed you can run the included setup.bat file.
 
 # Usage
+Notice: **NOT ALL VIDEOS WILL WORK!**
+
 ```py .\GVD.py```
 
 You can download a single video by entering its docid, or multiple videos at once by entering a filename.
