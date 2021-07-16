@@ -1,5 +1,7 @@
 import requests
+import urllib.parse as urlparse
 import os
+from urllib.parse import parse_qs
 from helpers import downloadVideo, makeDir, threadline
 
 docid = input("Enter docid (or filename that has docids): ")
@@ -8,8 +10,19 @@ rootPath = "FromID"
 makeDir(rootPath)
 makeDir(f"{rootPath}\\Videos")
 
+def getDocIdFromURL(url):
+    parsed = urlparse.urlparse(url.split(" ")[0])
+    if not parsed.scheme:
+        return False
+    try:
+        return parse_qs(parsed.query)['docid'][0]
+    except Exception as e:
+        return False
+
 def worker(lines):
     for line in lines:
+        if not getDocIdFromURL(line) == False:
+            line = getDocIdFromURL(line)
         req = requests.get(f"http://web.archive.org/web/http://video.google.com/videoplay?docid={line.strip().lstrip()}")
         if req.status_code == 200:
             print(f"Found page for {line.strip().lstrip()}")
@@ -23,6 +36,8 @@ except ImportError as e:
     print("[Warning] BS4 not found. You will not be able to save videos with titles as their names.")
 
 if mode == 0:
+    if not getDocIdFromURL(docid) == False:
+        docid = getDocIdFromURL(docid)
     req = requests.get(f"http://web.archive.org/web/http://video.google.com/videoplay?docid={docid}")
     if req.status_code == 200:
         print(f"Found page for {docid}")
