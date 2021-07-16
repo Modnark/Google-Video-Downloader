@@ -49,7 +49,7 @@ def tryDownload(docid):
         
 def worker(lines):
     for line in lines:
-        tryDownload(line)
+        tryDownload(line.strip().lstrip())
 try:
     from bs4 import BeautifulSoup
 except ImportError as e:
