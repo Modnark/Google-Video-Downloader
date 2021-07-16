@@ -12,6 +12,8 @@ The latest version of Python (get it [here](https://python.org))
 The requests module (install with pip)
 The bs4 module (install with pip)
 
+if you have python and pip installed you can run the included setup.bat file.
+
 # Usage
 ```py .\GVD.py```
 
