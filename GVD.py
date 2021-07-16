@@ -16,7 +16,7 @@ def getDocIdFromURL(url):
         return False
     try:
         return parse_qs(parsed.query)['docid'][0]
-    except Exception as e:
+    except Exception:
         return False
 
 def worker(lines):
